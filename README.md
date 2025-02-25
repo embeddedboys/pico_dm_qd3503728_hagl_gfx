@@ -46,3 +46,30 @@ Or you can using openocd by running under the build directory:
 ```bash
 ninja flash
 ```
+
+## Performance
+
+RP2350 ARM core with double buffering:
+
+```bash
+[main] 1461014 PIXELS per second, 99 fps, 209880 free heap
+[main] 18937 LINES per second, 99 fps, 209880 free heap
+[main] 147969 VERTICAL LINES per second, 99 fps, 209880 free heap
+[main] 418701 HORIZONTAL LINES per second, 99 fps, 209880 free heap
+[main] 39009 CIRCLES per second, 99 fps, 209880 free heap
+[main] 27269 FILLED CIRCLES per second, 99 fps, 209880 free heap
+[main] 21150 ELLIPSES per second, 99 fps, 209880 free heap
+[main] 11149 FILLED ELLIPSES per second, 99 fps, 209880 free heap
+[main] 6364 TRIANGLES per second, 99 fps, 209880 free heap
+[main] 3681 FILLED TRIANGLES per second, 99 fps, 209880 free heap
+[main] 61308 RECTANGLES per second, 99 fps, 209880 free heap
+[main] 5007 FILLED RECTANGLES per second, 99 fps, 209880 free heap
+[main] 46758 ROUND RECTANGLES per second, 99 fps, 209880 free heap
+[main] 4774 FILLED ROUND RECTANGLES per second, 99 fps, 209880 free heap
+[main] 3837 POLYGONS per second, 99 fps, 209880 free heap
+[main] 2145 FILLED POLYGONS per second, 99 fps, 209880 free heap
+[main] 86666 CHARACTERS per second, 99 fps, 209880 free heap
+[main] 5960 STRINGS per second, 99 fps, 209880 free heap
+[main] 35554 SCALED CHARACTERS per second, 99 fps, 209880 free heap
+[main] 699 RGB BARS per second, 99 fps, 209880 free heap
+```

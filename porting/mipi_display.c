@@ -102,7 +102,12 @@ mipi_display_write_xywh(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h, uint8_
 
     int32_t x2 = x1 + w - 1;
     int32_t y2 = y1 + h - 1;
+    uint16_t *color = (uint16_t *)buffer;
+
     uint32_t size = w * h;
+
+    for (size_t i = 0; i < size; i++)
+        color[i] = htons(color[i]);
 
     ili9488_video_flush(x1, y1, x2, y2, (void *)buffer, size);
 

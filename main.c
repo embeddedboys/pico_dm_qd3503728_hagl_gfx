@@ -20,6 +20,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <stdio.h>
+#include <wchar.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -396,9 +397,9 @@ int main(void)
     backlight_set_level(100);
     printf("backlight set to 100%%\n");
 
-    hagl_color_t red = hagl_color(display, 255, 0, 0);
+    // hagl_color_t red = hagl_color(display, 255, 0, 0);
     hagl_color_t green = hagl_color(display, 0, 255, 0);
-    hagl_color_t blue = hagl_color(display, 0, 0, 255);
+    // hagl_color_t blue = hagl_color(display, 0, 0, 255);
 
     hagl_bitmap_init(&glyph, 6, 9, display->depth, NULL);
     glyph.buffer = (uint8_t *) malloc(glyph.size);

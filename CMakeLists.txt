@@ -227,8 +227,7 @@ elseif(${PICO_BOARD} STREQUAL "pico2" OR ${PICO_PLATFORM} STREQUAL "rp2350")
     target_compile_definitions(${PROJECT_NAME} PRIVATE
         # HAGL_HAL_USE_SINGLE_BUFFER
 
-        # FIXME:
-        # the buffer of `mipi_display_write_xywh` should swap bit order for each 16 bits
+        # FIXME: text is blinking
         HAGL_HAL_USE_DOUBLE_BUFFER
 
         # NOTE: Don't use HAGL_HAL_USE_TRIPLE_BUFFER

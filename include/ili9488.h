@@ -23,7 +23,7 @@
 #define __ILI9488_H
 
 #include <stdint.h>
-#include "lvgl/lvgl.h"
+#include <stdbool.h>
 
 #define ILI9488_X_RES LCD_HOR_RES
 #define ILI9488_Y_RES LCD_VER_RES
@@ -45,6 +45,11 @@ enum {
 /* Bit 0,1 is reserved */
 
 extern int ili9488_driver_init();
+extern void ili9488_fill_color(int xs, int ys, int xe, int ye, uint16_t color, uint32_t len);
 extern void ili9488_video_flush(int xs, int ys, int xe, int ye, void *vmem16, uint32_t len);
-extern void ili9488_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p);
+extern int i80_pio_init(uint8_t db_base, uint8_t db_count, uint8_t pin_wr);
+extern int i80_write_buf_rs(void *buf, size_t len, bool rs);
+
+void ili9488_write_cmd(uint16_t cmd);
+void ili9488_write_data(uint16_t data);
 #endif

@@ -31,7 +31,7 @@ include(pico_sdk_import.cmake)
 include(pico_extras_import_optional.cmake)
 
 # set the project name
-project(pico_dm_qd3503728 C CXX ASM)
+project(pico_dm_qd3503728_hagl_gfx C CXX ASM)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
@@ -166,7 +166,8 @@ endif()
 include_directories(./ include)
 
 # add lvgl library here
-add_subdirectory(lvgl)
+add_subdirectory(hagl)
+add_subdirectory(porting)
 
 # include PIO library here
 add_subdirectory(pio)
@@ -176,21 +177,14 @@ target_compile_definitions(pio_i80 PUBLIC DEFAULT_PIO_CLK_KHZ=${PERI_CLK_KHZ})
 target_compile_definitions(pio_i80 PUBLIC PIO_USE_DMA=${PIO_USE_DMA})
 target_compile_definitions(pio_i80 PUBLIC I80_BUS_WR_CLK_KHZ=${I80_BUS_WR_CLK_KHZ})
 
-# include factory test library here
-# add_subdirectory(factory)
-
-# lv_conf.h need pico header files e.g. the custom tick
-target_link_libraries(lvgl PRIVATE pico_stdlib)
-
 # user define common source files
 file(GLOB_RECURSE COMMON_SOURCES
     main.c
     ili9488.c
     ft6236.c
-    porting/lv_port_disp_template.c
-    porting/lv_port_indev_template.c
     i2c_tools.c
     backlight.c
+    xoroshiro64star.c
 )
 
 # rest of your project
@@ -201,8 +195,7 @@ target_link_libraries(${PROJECT_NAME}
     hardware_pwm
     hardware_i2c
     pio_i80
-    # factory_test
-    lvgl lvgl::demos lvgl::examples
+    hagl hagl_hal
 )
 target_include_directories(${PROJECT_NAME} PUBLIC .)
 
@@ -221,6 +214,28 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC LCD_HOR_RES=${LCD_HOR_RES})
 target_compile_definitions(${PROJECT_NAME} PUBLIC LCD_VER_RES=${LCD_VER_RES})
 target_compile_definitions(${PROJECT_NAME} PUBLIC DISP_OVER_PIO=${DISP_OVER_PIO})
 target_compile_definitions(${PROJECT_NAME} PUBLIC MY_DISP_BUF_SIZE=${MY_DISP_BUF_SIZE})
+
+# marcos of HAGL
+if(${PICO_BOARD} STREQUAL "pico" OR ${PICO_PLATFORM} STREQUAL "rp2040")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE
+        # NOTE: rp2040 only support single buffer
+        # otherwise, it will out of memory.
+        HAGL_HAL_USE_SINGLE_BUFFER
+        HAGL_HAL_DEBUG
+    )
+elseif(${PICO_BOARD} STREQUAL "pico2" OR ${PICO_PLATFORM} STREQUAL "rp2350")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE
+        # HAGL_HAL_USE_SINGLE_BUFFER
+
+        # FIXME:
+        # the buffer of `mipi_display_write_xywh` should swap bit order for each 16 bits
+        HAGL_HAL_USE_DOUBLE_BUFFER
+
+        # NOTE: Don't use HAGL_HAL_USE_TRIPLE_BUFFER
+        # because it will cause rp2350 out of memory.
+        HAGL_HAL_DEBUG
+    )
+endif()
 
 # Note: If you are using a NOR flash like "w25q16". Just keep the following content.
 # The maximum speed of "w25q16" is 133MHz, However, the clock speed of XIP QSPI is divided from "sys_clk".

@@ -32,6 +32,8 @@
 #define FT6236_ADDR      0x38
 #define FT6236_DEF_SPEED 400000
 
+#define __sram __section(".time_critical.func")
+
 typedef enum {
     FT6236_DIR_NOP       = 0x00,
     FT6236_DIR_INVERT_X  = 0x01,
@@ -65,14 +67,14 @@ struct ft6236_data {
 
 extern int i2c_bus_scan(i2c_inst_t *i2c);
 
-static void ft6236_write_reg(struct ft6236_data *priv, uint8_t reg, uint8_t val)
+static void __sram ft6236_write_reg(struct ft6236_data *priv, uint8_t reg, uint8_t val)
 {
     uint16_t buf = val << 8 | reg;
     i2c_write_blocking(priv->i2c.master, priv->i2c.addr, (uint8_t *)&buf, sizeof(buf), false);
 }
 #define write_reg ft6236_write_reg
 
-static uint8_t ft6236_read_reg(struct ft6236_data *priv, uint8_t reg)
+static uint8_t __sram ft6236_read_reg(struct ft6236_data *priv, uint8_t reg)
 {
     uint8_t val;
     i2c_write_blocking(priv->i2c.master, priv->i2c.addr, &reg, 1, true);
@@ -81,7 +83,7 @@ static uint8_t ft6236_read_reg(struct ft6236_data *priv, uint8_t reg)
 }
 #define read_reg ft6236_read_reg
 
-static void __ft6236_reset(struct ft6236_data *priv)
+static void __sram __ft6236_reset(struct ft6236_data *priv)
 {
     gpio_put(priv->rst_pin, 1);
     sleep_ms(10);
@@ -91,7 +93,7 @@ static void __ft6236_reset(struct ft6236_data *priv)
     sleep_ms(10);
 }
 
-static uint16_t __ft6236_read_x(struct ft6236_data *priv)
+static uint16_t __sram __ft6236_read_x(struct ft6236_data *priv)
 {
     uint8_t val_h = read_reg(priv, FT_REG_TOUCH1_XH) & 0x1f;  /* the MSB is always high, but it shouldn't */
     uint8_t val_l = read_reg(priv, FT_REG_TOUCH1_XL);
@@ -103,12 +105,12 @@ static uint16_t __ft6236_read_x(struct ft6236_data *priv)
     return val;
 }
 
-uint16_t ft6236_read_x(void)
+uint16_t __sram ft6236_read_x(void)
 {
     return g_ft6236_data.read_x(&g_ft6236_data);
 }
 
-static uint16_t __ft6236_read_y(struct ft6236_data *priv)
+static uint16_t __sram __ft6236_read_y(struct ft6236_data *priv)
 {
     uint8_t val_h = read_reg(priv, FT_REG_TOUCH1_YH);
     uint8_t val_l = read_reg(priv, FT_REG_TOUCH1_YL);
@@ -118,18 +120,18 @@ static uint16_t __ft6236_read_y(struct ft6236_data *priv)
         return ((val_h << 8) | val_l);
 }
 
-uint16_t ft6236_read_y(void)
+uint16_t __sram ft6236_read_y(void)
 {
     return g_ft6236_data.read_y(&g_ft6236_data);
 }
 
-static bool __ft6236_is_pressed(struct ft6236_data *priv)
+static bool __sram __ft6236_is_pressed(struct ft6236_data *priv)
 {
     uint8_t val = read_reg(priv, FT_REG_TD_STATUS);
     return val;
 }
 
-bool ft6236_is_pressed(void)
+bool __sram ft6236_is_pressed(void)
 {
     return __ft6236_is_pressed(&g_ft6236_data);
 }

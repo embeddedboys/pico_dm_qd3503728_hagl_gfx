@@ -185,6 +185,7 @@ file(GLOB_RECURSE COMMON_SOURCES
     i2c_tools.c
     backlight.c
     xoroshiro64star.c
+    console.c
 )
 
 # rest of your project

@@ -360,6 +360,7 @@ flush_timer_callback(struct repeating_timer *t)
     return true;
 }
 
+extern int console_demo(hagl_backend_t *display);
 
 int main(void)
 {
@@ -396,6 +397,8 @@ int main(void)
     backlight_driver_init();
     backlight_set_level(100);
     printf("backlight set to 100%%\n");
+
+    console_demo(display);
 
     // hagl_color_t red = hagl_color(display, 255, 0, 0);
     hagl_color_t green = hagl_color(display, 0, 255, 0);
